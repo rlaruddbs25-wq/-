@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독서 감상문 작성 도우미 📖</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo" id="logo-refresh">
+                <span class="logo-icon">📖</span>
+                <span>독서 감상문 도우미</span>
+            </a>
+            <div class="nav-links">
+                <button type="button" id="btn-new-report" class="btn btn-outline">➕ 새 감상문 쓰기</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Top Toast Notification (Hidden by default) -->
+        <div id="toast" class="toast">알림 메시지</div>
+
+        <form id="report-form">
+            <!-- Hidden input to track if we are editing an existing report -->
+            <input type="hidden" id="report-id" value="">
+
+            <div class="editor-layout">
+                <!-- Left Column: Inputs & Helpers -->
+                <div class="card">
+                    <h2 class="section-title"><span>📚</span> 1단계: 도서 정보 & 감상 재료 입력</h2>
+                    
+                    <div class="form-group">
+                        <label for="title">책 제목 <span style="color: var(--error-color);">*</span></label>
+                        <input type="text" id="title" class="form-control" placeholder="예: 어린 왕자" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="author">저자 <span style="color: var(--error-color);">*</span></label>
+                        <input type="text" id="author" class="form-control" placeholder="예: 생텍쥐페리" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="read-range">읽은 범위</label>
+                        <input type="text" id="read-range" class="form-control" placeholder="예: 완독, 1장~5장, 120페이지까지 등">
+                    </div>
+                    
+                    <hr class="divider">
+                    
+                    <!-- Recommendation Helpers (Recommended Questions) -->
+                    <div class="helper-box">
+                        <div class="helper-title">
+                            <span>💡</span> 글감이 생각나지 않을 때? 가이드 질문 참고하기
+                        </div>
+                        <div class="question-list">
+                            <!-- Q1 -->
+                            <div class="question-item">
+                                <button type="button" class="question-trigger" data-target="q-content-1">
+                                    <span>1. 인상 깊었던 장면은 무엇인가?</span>
+                                    <span>▼</span>
+                                </button>
+                                <div class="question-content" id="q-content-1">
+                                    <p>이야기 중 가장 기억에 남는 장면이나 구절, 인물의 행동을 떠올려 보세요.</p>
+                                    <div class="question-actions">
+                                        <button type="button" class="btn btn-secondary btn-mini btn-insert-hint" data-field="scene" data-hint="[내가 꼽은 가장 인상 깊은 장면은]">인상 깊은 장면에 템플릿 넣기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Q2 -->
+                            <div class="question-item">
+                                <button type="button" class="question-trigger" data-target="q-content-2">
+                                    <span>2. 등장인물의 행동을 어떻게 평가하는가?</span>
+                                    <span>▼</span>
+                                </button>
+                                <div class="question-content" id="q-content-2">
+                                    <p>주인공이나 조연의 결정에 동의하나요? 나였다면 어떻게 행동했을지 써보세요.</p>
+                                    <div class="question-actions">
+                                        <button type="button" class="btn btn-secondary btn-mini btn-insert-hint" data-field="feeling" data-hint="[등장인물의 행동을 보며 든 생각은]">느낀 점에 템플릿 넣기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Q3 -->
+                            <div class="question-item">
+                                <button type="button" class="question-trigger" data-target="q-content-3">
+                                    <span>3. 작품의 주제는 무엇이라고 생각하는가?</span>
+                                    <span>▼</span>
+                                </button>
+                                <div class="question-content" id="q-content-3">
+                                    <p>작가가 이 책을 통해 우리에게 전달하고자 하는 중요한 생각은 무엇일까요?</p>
+                                    <div class="question-actions">
+                                        <button type="button" class="btn btn-secondary btn-mini btn-insert-hint" data-field="feeling" data-hint="[이 책의 주제에 관해 내가 느낀 것은]">느낀 점에 템플릿 넣기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Q4 -->
+                            <div class="question-item">
+                                <button type="button" class="question-trigger" data-target="q-content-4">
+                                    <span>4. 책을 읽고 새롭게 알게 된 점은 무엇인가?</span>
+                                    <span>▼</span>
+                                </button>
+                                <div class="question-content" id="q-content-4">
+                                    <p>배경지식을 새로 얻었거나, 나의 가치관과 생활 태도에 변화가 생겼는지 작성해 보세요.</p>
+                                    <div class="question-actions">
+                                        <button type="button" class="btn btn-secondary btn-mini btn-insert-hint" data-field="feeling" data-hint="[이 책을 통해 새롭게 깨닫게 된 점은]">느낀 점에 템플릿 넣기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="summary">줄거리 (요약)</label>
+                        <textarea id="summary" class="form-control" placeholder="책의 대략적인 전개와 핵심 줄거리를 적어주세요." rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="scene">인상 깊은 장면</label>
+                        <textarea id="scene" class="form-control" placeholder="가장 마음을 울렸거나 재미있었던 장면을 적어주세요." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feeling">느낀 점 및 깨달은 점</label>
+                        <textarea id="feeling" class="form-control" placeholder="책을 다 읽고 든 생각, 변화된 나만의 다짐 등을 적어주세요." rows="4"></textarea>
+                    </div>
+                    
+                    <button type="button" id="btn-generate-draft" class="btn btn-primary btn-block" style="background-color: #ff9f43; border-color: #ff9f43;">
+                        ⚡ 2단계: 독서 감상문 초안 자동 조합하기
+                    </button>
+                </div>
+                
+                <!-- Right Column: Live Draft Editor -->
+                <div class="draft-container">
+                    <div class="card" style="border-color: #ffd082; background-color: #fffdf9;">
+                        <h2 class="section-title" style="border-bottom-color: #ff9f43; display: flex; justify-content: space-between; align-items: center;">
+                            <span>📝 3단계: 초안 수정 & 저장</span>
+                            <button type="button" id="btn-print" class="btn btn-outline btn-mini" style="display: none; border-color: #ff9f43; color: #d07010;">🖨️ 인쇄 / PDF</button>
+                        </h2>
+                        
+                        <!-- Dynamic Placeholder when draft is empty -->
+                        <div id="draft-placeholder" class="draft-placeholder">
+                            <span class="draft-placeholder-icon">📑</span>
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">초안이 생성되지 않았습니다</p>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">왼쪽에서 도서 정보를 입력한 후<br>'<strong>2단계: 초안 자동 조합하기</strong>' 버튼을 눌러보세요.</p>
+                        </div>
+                        
+                        <!-- Actual Textarea editor (hidden initially if no draft exists) -->
+                        <div id="draft-editor-wrapper" style="display: none;">
+                            <p style="font-size: 0.82rem; color: #a05a00; background-color: #fff3cd; padding: 0.6rem 0.8rem; border-radius: 6px; margin-bottom: 1rem; font-weight: 500;">
+                                💡 아래 완성된 글을 읽어보며 마음에 들지 않는 문장이나 표현을 직접 자유롭게 수정해 보세요.
+                            </p>
+                            <div class="form-group">
+                                <textarea id="draft_content" class="form-control draft-editor" rows="18" placeholder="여기에 최종 독서 감상문 내용이 생성됩니다."></textarea>
+                            </div>
+                            
+                            <button type="button" id="btn-save-report" class="btn btn-primary btn-block" style="background-color: var(--primary-color); padding: 0.8rem;">
+                                💾 독서 감상문 최종 저장하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Bottom Area: Saved Reports List -->
+        <section class="card" style="margin-top: 2rem;">
+            <h2 class="section-title" style="border-bottom-color: var(--secondary-color);"><span>📂</span> 내 독서 감상문 서랍 (로컬 저장소)</h2>
+            <div id="reports-list-container" class="report-list-grid">
+                <!-- Javascript will populate this -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Printable Version Wrapper (Hidden on screen via CSS) -->
+    <div id="print-area" class="print-only">
+        <h1 id="print-title"></h1>
+        <div class="print-meta">
+            <span id="print-author"></span>
+            <span id="print-range"></span>
+            <span id="print-date"></span>
+        </div>
+        <hr>
+        <div id="print-content" class="print-content"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 독서 감상문 작성 도우미. Local Storage 기반의 100% 정적 클라이언트 애플리케이션.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
